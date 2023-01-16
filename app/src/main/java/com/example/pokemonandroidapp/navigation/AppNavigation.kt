@@ -14,7 +14,7 @@ fun AppNavigation() {
     val navigationController = rememberNavController()
     NavHost(navController = navigationController, startDestination = AppScreens.MenuInicio.ruta) {
         composable(AppScreens.MenuInicio.ruta) { MenuInicio(navigationController) }
-        composable(AppScreens.GuardarPokemon.ruta) {GuardarPokemon(navigationController) }
+        composable(AppScreens.GuardarPokemon.ruta) { GuardarPokemon(navigationController) }
         composable(AppScreens.ModificarPokemon.ruta) {ModificarPokemon(navigationController) }
         composable(AppScreens.BorrarPokemon.ruta) { BorrarPokemon(navigationController) }
         composable(AppScreens.ConsultarPokemon.ruta) {ConsultarPokemon(navigationController) }

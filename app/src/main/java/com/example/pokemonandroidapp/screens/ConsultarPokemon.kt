@@ -16,7 +16,7 @@ import androidx.navigation.NavHostController
 import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
-fun ConsultarCliente(navController: NavHostController) {
+fun ConsultarPokemon(navController: NavHostController) {
 
     var nombre_coleccion = "clientes"
     val db = FirebaseFirestore.getInstance()

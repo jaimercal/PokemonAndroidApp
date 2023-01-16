@@ -14,11 +14,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
 
-fun GuardarCliente(navController: NavHostController) {
+fun GuardarPokemon(navController: NavHostController) {
 
     val db = FirebaseFirestore.getInstance()
 
-    var nombre_coleccion = "clientes"
+    var nombre_coleccion = "pokemon"
     var id by remember { mutableStateOf("") }
     var nombre_cliente by remember { mutableStateOf("") }
     var direccion_cliente by remember { mutableStateOf("") }

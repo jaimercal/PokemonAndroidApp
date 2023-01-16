@@ -14,7 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
 // FUNCION PARA BORRAR UN DOCUMENTO DE LA COLECCION
-fun BorrarCliente(navController: NavHostController) {
+fun BorrarPokemon(navController: NavHostController) {
 
     val db = FirebaseFirestore.getInstance()
 
