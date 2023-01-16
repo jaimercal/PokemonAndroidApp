@@ -14,7 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
 // FUNCION PARA MODIFICAR LOS CAMPOS DE UN DOCUMENTO
-fun ModificarPokemon(navController: NavHostController) {
+fun EditPokemon(navController: NavHostController) {
 
     val db = FirebaseFirestore.getInstance()
 

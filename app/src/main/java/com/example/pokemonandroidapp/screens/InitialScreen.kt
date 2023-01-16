@@ -2,7 +2,6 @@ package com.example.pokemonandroidapp.screens
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -10,18 +9,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.pokemonandroidapp.R
-import com.example.pokemonandroidapp.navigation.AppScreens
-import com.example.pokemonandroidapp.navigation.AppNavigation
 
 @Composable
-fun MenuInicio(navController: NavHostController) {
+fun InitialScreen(navController: NavHostController) {
 
     Card(
         modifier = Modifier
@@ -47,25 +43,16 @@ fun MenuInicio(navController: NavHostController) {
 
 
             Image(
-                    painter = painterResource(R.drawable.firebase_completo),
+                    painter = painterResource(R.drawable.pokemonlogo),
                     contentDescription = "LogoFirebase",
-                    modifier = Modifier.size(170.dp)
+                    modifier = Modifier.size(450.dp)
                 )
 
-            //Spacer(modifier = Modifier.size(10.dp))
 
-            Text(
-                text = "Clientes",
-                fontSize = 28.sp,
-                fontWeight = FontWeight.ExtraBold,
-
-                )
-
-            Spacer(modifier = Modifier.size(10.dp))
 
             Button(
                 onClick = {
-                    navController.navigate("GuardarCliente")
+                    navController.navigate("SavePokemon")
 
 
                 },
@@ -83,7 +70,7 @@ fun MenuInicio(navController: NavHostController) {
 
             Button(
                 onClick = {
-                    navController.navigate("ModificarCliente")
+                    navController.navigate("EditPokemon")
                 },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = Color.Blue,
@@ -115,7 +102,7 @@ fun MenuInicio(navController: NavHostController) {
 
             Button(
                 onClick = {
-                    navController.navigate("ConsultarCliente")
+                    navController.navigate("ListPokemon")
                 },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = Color.Blue,
@@ -136,5 +123,5 @@ fun MenuInicio(navController: NavHostController) {
 
 @Preview (showBackground = true)
 @Composable
-fun MenuInicio () {
+fun InitialScreen () {
 }

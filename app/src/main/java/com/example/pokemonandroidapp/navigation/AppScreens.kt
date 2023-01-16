@@ -1,10 +1,10 @@
 package com.example.pokemonandroidapp.navigation
 
 // CREAMOS UNA SEALED CLASS PARA CONTENER LOS OBJETOS DE CADA RUTA
-sealed class AppScreens(val ruta: String){
-    object MenuInicio: AppScreens("MenuInicio")
-    object GuardarPokemon: AppScreens("GuardarPokemon")
-    object ModificarPokemon: AppScreens("ModificarPokemon")
+sealed class AppScreens(val route: String){
+    object InitialScreen: AppScreens("InitialScreen")
+    object SavePokemon: AppScreens("SavePokemon")
+    object EditPokemon: AppScreens("EditPokemon")
     object BorrarPokemon: AppScreens("BorrarPokemon")
-    object ConsultarPokemon: AppScreens("ConsultarPokemon")
+    object ListPokemon: AppScreens("ListPokemon")
     }

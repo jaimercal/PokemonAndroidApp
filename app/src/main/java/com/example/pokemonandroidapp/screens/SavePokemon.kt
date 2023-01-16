@@ -14,16 +14,15 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
 
-fun GuardarPokemon(navController: NavHostController) {
+fun SavePokemon(navController: NavHostController) {
 
     val db = FirebaseFirestore.getInstance()
 
-    var nombre_coleccion = "pokemon"
-    var id by remember { mutableStateOf("") }
-    var nombre_cliente by remember { mutableStateOf("") }
-    var direccion_cliente by remember { mutableStateOf("") }
-    var telefono_cliente by remember { mutableStateOf("") }
-    var mail_cliente by remember { mutableStateOf("") }
+    val collectionName = "pokemon"
+    var pokemonNumber by remember { mutableStateOf("") }
+    var pokemonName by remember { mutableStateOf("") }
+    var pokemonPrimaryType by remember { mutableStateOf("") }
+    var pokemonSecondaryType by remember { mutableStateOf("") }
 
     Card(
         modifier = Modifier
@@ -54,8 +53,8 @@ fun GuardarPokemon(navController: NavHostController) {
             Spacer(modifier = Modifier.size(20.dp))
 
             OutlinedTextField(
-                value = id,
-                onValueChange = { id = it },
+                value = pokemonNumber,
+                onValueChange = { pokemonNumber = it },
                 label = { Text("Introduce el NIF") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
@@ -64,8 +63,8 @@ fun GuardarPokemon(navController: NavHostController) {
             Spacer(modifier = Modifier.size(5.dp))
 
             OutlinedTextField(
-                value = nombre_cliente,
-                onValueChange = { nombre_cliente = it },
+                value = pokemonName,
+                onValueChange = { pokemonName = it },
                 label = { Text("Introduce el nombre") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
@@ -74,22 +73,10 @@ fun GuardarPokemon(navController: NavHostController) {
             Spacer(modifier = Modifier.size(5.dp))
 
             OutlinedTextField(
-                value = direccion_cliente,
+                value = pokemonPrimaryType,
 
-                onValueChange = { direccion_cliente = it },
+                onValueChange = { pokemonPrimaryType = it },
                 label = { Text("Introduce la dirección") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-            )
-
-            Spacer(modifier = Modifier.size(5.dp))
-
-
-
-            OutlinedTextField(
-                value = mail_cliente,
-                onValueChange = { mail_cliente = it },
-                label = { Text("Introduce el mail") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
             )
@@ -97,45 +84,42 @@ fun GuardarPokemon(navController: NavHostController) {
             Spacer(modifier = Modifier.size(10.dp))
 
             OutlinedTextField(
-                value = telefono_cliente,
-                onValueChange = { telefono_cliente = it },
+                value = pokemonSecondaryType,
+                onValueChange = { pokemonSecondaryType = it },
                 label = { Text("Introduce el teléfono") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
             )
 
             Spacer(modifier = Modifier.size(5.dp))
-            val dato = hashMapOf(
-                "nif" to id.toString(),
-                "nombre" to nombre_cliente.toString(),
-                "direccion" to direccion_cliente.toString(),
-                "mail" to mail_cliente.toString(),
-                "telefono" to telefono_cliente.toString()
+            val data = hashMapOf(
+                "number" to pokemonNumber.toString(),
+                "name" to pokemonName.toString(),
+                "primaryType" to pokemonPrimaryType.toString(),
+                "secondaryType" to pokemonSecondaryType.toString()
             )
 
-            var mensaje_confirmacion by remember { mutableStateOf("") }
+            var confirmationMessage by remember { mutableStateOf("") }
 
             Button(
 
                 onClick = {
-                    db.collection(nombre_coleccion)
-                        .document(id)
-                        .set(dato)
+                    db.collection(collectionName)
+                        .document(pokemonNumber)
+                        .set(data)
                         .addOnSuccessListener {
-                            mensaje_confirmacion ="Datos guardados correctamente"
-                            id =""
-                            nombre_cliente=""
-                            direccion_cliente=""
-                            mail_cliente=""
-                            telefono_cliente=""
+                            confirmationMessage ="Datos guardados correctamente"
+                            pokemonNumber =""
+                            pokemonName=""
+                            pokemonPrimaryType=""
+                            pokemonSecondaryType=""
                         }
                         .addOnFailureListener {
-                            mensaje_confirmacion ="No se ha podido guardar"
-                            id =""
-                            nombre_cliente=""
-                            direccion_cliente=""
-                            mail_cliente=""
-                            telefono_cliente=""
+                            confirmationMessage ="No se ha podido guardar"
+                            pokemonNumber =""
+                            pokemonName=""
+                            pokemonPrimaryType=""
+                            pokemonSecondaryType=""
                         }
                 },
 
@@ -152,7 +136,7 @@ fun GuardarPokemon(navController: NavHostController) {
 
             }
             Spacer(modifier = Modifier.size(5.dp))
-            Text(text = mensaje_confirmacion)
+            Text(text = confirmationMessage)
         }
 
     }
