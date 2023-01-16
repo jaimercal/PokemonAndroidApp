@@ -1,5 +1,6 @@
 package com.example.pokemonandroidapp.screens
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -24,41 +25,24 @@ fun ListPokemon(navController: NavHostController) {
 
     val collectionPath = "pokemon"
     val db = FirebaseFirestore.getInstance()
-    var data = rememberSaveable { mutableListOf<Pokemon>() }
-    var message = ""
-    val errorMessage = "No existen datos"
-    val dbError = "La conexión a FireStore no se ha podido completar"
-    val successMessage = "Se ha eliminado con exito"
+    var data by rememberSaveable { mutableStateOf(emptyArray<Pokemon>()) }
 
     db.collection(collectionPath)
         .get()
         .addOnSuccessListener {
-            data.clear()
+            data = emptyArray()
             for (received in it) {
-                val auxData = Pokemon(received.get("number") as String, received.get("name") as String, received.get("primaryType") as String, received.get("secondaryType") as String)
-                data.add(auxData)
-                //Log.i("DATOS:", datos)
+                val auxData = Pokemon(received.id, received.get("name") as String, received.get("primaryType") as String, received.get("secondaryType") as String)
+                data += auxData
             }
-
-            if (data.isEmpty()) {
-                message = errorMessage
-            }
-        }
-        .addOnSuccessListener {
-            message = successMessage
-        }
-        .addOnFailureListener {
-            message = dbError
         }
 
     Column(
 
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 100.dp)
-            .padding(start = 10.dp)
-            .padding(end = 10.dp)
+            .fillMaxWidth()
+            .padding(top = 100.dp, start = 10.dp, end = 10.dp)
     ) {
 
         Text(
@@ -75,18 +59,11 @@ fun ListPokemon(navController: NavHostController) {
                 .padding(bottom = 30.dp),
         ) {
             data.forEach { pokemon ->
-                var delete = false
-                PokemonBox(pokemon = pokemon, delete = delete) {
-                        db.collection(collectionPath)
-                            .document(pokemon.number.toString())
-                            .delete()
-                            .addOnSuccessListener {
-                                message = successMessage
-                            }
-                            .addOnFailureListener {
-                                message = errorMessage
-                            }
-                    }
+                PokemonBox(pokemon = pokemon, delete = true) {
+                    db.collection(collectionPath)
+                        .document(pokemon.number)
+                        .delete()
+                }
             }
         }
     }
@@ -102,7 +79,7 @@ fun PokemonBox(pokemon: Pokemon, delete: Boolean, deleteButtonAction: () -> Unit
             .padding(10.dp)
     ) {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Text(text = pokemon.number.toString(), color = Color.Black)
+            Text(text = pokemon.number, color = Color.Black)
             Text(text = pokemon.name, color = Color.Black)
             Text(text = pokemon.primaryType, color = Color.Black)
             Text(text = pokemon.secondaryType, color = Color.Black)
@@ -112,9 +89,7 @@ fun PokemonBox(pokemon: Pokemon, delete: Boolean, deleteButtonAction: () -> Unit
                 Button(onClick = deleteButtonAction, modifier = Modifier.width(100.dp)) {
                     Text(text = "Borrar")
                 }
-
             }
         }
-
     }
 }

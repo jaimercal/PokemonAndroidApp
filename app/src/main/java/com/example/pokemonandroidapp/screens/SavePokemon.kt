@@ -1,15 +1,24 @@
 package com.example.pokemonandroidapp.screens
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.unit.toSize
 import androidx.navigation.NavHostController
+import com.example.pokemonandroidapp.ui.theme.*
 import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
@@ -72,24 +81,86 @@ fun SavePokemon(navController: NavHostController) {
 
             Spacer(modifier = Modifier.size(5.dp))
 
-            OutlinedTextField(
-                value = pokemonPrimaryType,
-
-                onValueChange = { pokemonPrimaryType = it },
-                label = { Text("Introduce el tipo principal") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
+            var expanded by remember { mutableStateOf(false) }
+            val primaryTypes = listOf(
+                "Normal", "Fuego", "Agua", "Eléctrico", "Planta", "Hielo", "Lucha", "Veneno", "Tierra", "Volador", "Psíquico", "Bicho", "Roca", "Fantasma", "Dragón", "Siniestro", "Acero", "Hada"
             )
+            val secondaryTypes = listOf(
+                "Normal", "Fuego", "Agua", "Eléctrico", "Planta", "Hielo", "Lucha", "Veneno", "Tierra", "Volador", "Psíquico", "Bicho", "Roca", "Fantasma", "Dragón", "Siniestro", "Acero", "Hada", "No tiene"
+            )
+
+
+            var textFieldSizeDropDownMenu by remember { mutableStateOf(Size.Zero)}
+
+            val icon = if (expanded)
+                Icons.Filled.KeyboardArrowUp
+            else
+                Icons.Filled.KeyboardArrowDown
+
+
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onGloballyPositioned { coordinates ->
+                        textFieldSizeDropDownMenu = coordinates.size.toSize()
+                    },
+                value = pokemonPrimaryType,
+                onValueChange = {  },
+                readOnly = true,
+                label = {Text("Introduce el tipo principal", Modifier.clickable { expanded = !expanded })},
+                trailingIcon = {
+                    Icon(icon,"contentDescription",
+                        Modifier.clickable { expanded = !expanded })
+                }
+            )
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                modifier = Modifier
+                    .width(with(LocalDensity.current){textFieldSizeDropDownMenu.width.toDp()})
+            ) {
+                primaryTypes.forEach { label ->
+                    DropdownMenuItem(onClick = {
+                        pokemonPrimaryType = label
+                        expanded = false
+                    }) {
+                        Text(text = label)
+                    }
+                }
+            }
 
             Spacer(modifier = Modifier.size(10.dp))
 
             OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onGloballyPositioned { coordinates ->
+                        textFieldSizeDropDownMenu = coordinates.size.toSize()
+                    },
                 value = pokemonSecondaryType,
-                onValueChange = { pokemonSecondaryType = it },
-                label = { Text("Introduce el tipo secundario") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
+                onValueChange = {  },
+                readOnly = true,
+                label = {Text("Introduce el tipo secundario", Modifier.clickable { expanded = !expanded })},
+                trailingIcon = {
+                    Icon(icon,"contentDescription",
+                        Modifier.clickable { expanded = !expanded })
+                }
             )
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                modifier = Modifier
+                    .width(with(LocalDensity.current){textFieldSizeDropDownMenu.width.toDp()})
+            ) {
+                secondaryTypes.forEach { label ->
+                    DropdownMenuItem(onClick = {
+                        pokemonSecondaryType = label
+                        expanded = false
+                    }) {
+                        Text(text = label)
+                    }
+                }
+            }
 
             Spacer(modifier = Modifier.size(5.dp))
             val data = hashMapOf(
