@@ -45,7 +45,7 @@ fun InitialScreen(navController: NavHostController) {
             Image(
                     painter = painterResource(R.drawable.pokemonlogo),
                     contentDescription = "LogoFirebase",
-                    modifier = Modifier.size(450.dp)
+                    modifier = Modifier.size(250.dp)
                 )
 
 
@@ -80,22 +80,6 @@ fun InitialScreen(navController: NavHostController) {
             )
             {
                 Text(text = "Modificar")
-            }
-
-            Spacer(modifier = Modifier.size(8.dp))
-
-            Button(
-                onClick = {
-                    navController.navigate("BorrarCliente")
-                },
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.Blue,
-                    contentColor = Color.White
-                ),
-                border = BorderStroke(1.dp, Color.Black)
-            )
-            {
-                Text(text = "Borrar")
             }
 
             Spacer(modifier = Modifier.size(8.dp))

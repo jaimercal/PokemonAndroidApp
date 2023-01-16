@@ -14,7 +14,6 @@ fun AppNavigation() {
         composable(AppScreens.InitialScreen.route) { InitialScreen(navigationController) }
         composable(AppScreens.SavePokemon.route) { SavePokemon(navigationController) }
         composable(AppScreens.EditPokemon.route) {EditPokemon(navigationController) }
-        composable(AppScreens.BorrarPokemon.route) { BorrarPokemon(navigationController) }
         composable(AppScreens.ListPokemon.route) {ListPokemon(navigationController) }
     }
 }

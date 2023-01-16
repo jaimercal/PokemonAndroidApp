@@ -46,7 +46,7 @@ fun SavePokemon(navController: NavHostController) {
         ) {
 
             Text(
-                text = "Guardar cliente",
+                text = "Guardar Pokemon",
                 fontWeight = FontWeight.ExtraBold
             )
 
@@ -55,7 +55,7 @@ fun SavePokemon(navController: NavHostController) {
             OutlinedTextField(
                 value = pokemonNumber,
                 onValueChange = { pokemonNumber = it },
-                label = { Text("Introduce el NIF") },
+                label = { Text("Introduce el número") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
             )
@@ -76,7 +76,7 @@ fun SavePokemon(navController: NavHostController) {
                 value = pokemonPrimaryType,
 
                 onValueChange = { pokemonPrimaryType = it },
-                label = { Text("Introduce la dirección") },
+                label = { Text("Introduce el tipo principal") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
             )
@@ -86,7 +86,7 @@ fun SavePokemon(navController: NavHostController) {
             OutlinedTextField(
                 value = pokemonSecondaryType,
                 onValueChange = { pokemonSecondaryType = it },
-                label = { Text("Introduce el teléfono") },
+                label = { Text("Introduce el tipo secundario") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
             )
@@ -94,7 +94,7 @@ fun SavePokemon(navController: NavHostController) {
             Spacer(modifier = Modifier.size(5.dp))
             val data = hashMapOf(
                 "number" to pokemonNumber.toString(),
-                "name" to pokemonName.toString(),
+                "name" to pokemonName.toString().lowercase(),
                 "primaryType" to pokemonPrimaryType.toString(),
                 "secondaryType" to pokemonSecondaryType.toString()
             )
