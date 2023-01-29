@@ -10,11 +10,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.pokemonandroidapp.viewModel.EditPokemonViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
 // FUNCION PARA MODIFICAR LOS CAMPOS DE UN DOCUMENTO
-fun EditPokemon(navController: NavHostController) {
+fun EditPokemon(navController: NavHostController, editPokemonViewModel: EditPokemonViewModel) {
 
     val db = FirebaseFirestore.getInstance()
 

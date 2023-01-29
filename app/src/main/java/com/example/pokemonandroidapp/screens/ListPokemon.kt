@@ -1,13 +1,9 @@
 package com.example.pokemonandroidapp.screens
 
-import android.util.Log
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -18,10 +14,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.pokemonandroidapp.model.Pokemon
+import com.example.pokemonandroidapp.viewModel.ListPokemonViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
-fun ListPokemon(navController: NavHostController) {
+fun ListPokemon(navController: NavHostController, listPokemonViewModel: ListPokemonViewModel) {
 
     val collectionPath = "pokemon"
     val db = FirebaseFirestore.getInstance()

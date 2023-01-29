@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,19 +20,21 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.toSize
 import androidx.navigation.NavHostController
 import com.example.pokemonandroidapp.ui.theme.*
+import com.example.pokemonandroidapp.viewModel.SavePokemonViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
 
-fun SavePokemon(navController: NavHostController) {
+fun SavePokemon(navController: NavHostController, savePokemonViewModel: SavePokemonViewModel) {
 
     val db = FirebaseFirestore.getInstance()
 
     val collectionName = "pokemon"
-    var pokemonNumber by remember { mutableStateOf("") }
-    var pokemonName by remember { mutableStateOf("") }
-    var pokemonPrimaryType by remember { mutableStateOf("") }
-    var pokemonSecondaryType by remember { mutableStateOf("") }
+    val pokemonNumber by savePokemonViewModel.pokemonNumber.observeAsState(initial = "")
+    val pokemonName by savePokemonViewModel.pokemonName.observeAsState(initial = "")
+    val pokemonPrimaryType by savePokemonViewModel.pokemonPrimaryType.observeAsState(initial = "")
+    val pokemonSecondaryType by savePokemonViewModel.pokemonSecondaryType.observeAsState(initial = "")
+    val isButtonEnable:Boolean by savePokemonViewModel.isButtonEnable.observeAsState(initial = false)
 
     Card(
         modifier = Modifier
@@ -43,7 +46,6 @@ fun SavePokemon(navController: NavHostController) {
         contentColor = Color.DarkGray,
         border = BorderStroke(1.dp, Color.Blue)
     ) {
-
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -51,9 +53,7 @@ fun SavePokemon(navController: NavHostController) {
                 .padding(top = 100.dp)
                 .padding(start= 10.dp)
                 .padding(end= 10.dp)
-
         ) {
-
             Text(
                 text = "Guardar Pokemon",
                 fontWeight = FontWeight.ExtraBold
@@ -63,7 +63,7 @@ fun SavePokemon(navController: NavHostController) {
 
             OutlinedTextField(
                 value = pokemonNumber,
-                onValueChange = { pokemonNumber = it },
+                onValueChange = { savePokemonViewModel.onCompletedFields(pokemonNumber = it, pokemonName = pokemonName, pokemonPrimaryType = pokemonPrimaryType, pokemonSecondaryType = pokemonSecondaryType) },
                 label = { Text("Introduce el número") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
@@ -73,7 +73,7 @@ fun SavePokemon(navController: NavHostController) {
 
             OutlinedTextField(
                 value = pokemonName,
-                onValueChange = { pokemonName = it },
+                onValueChange = { savePokemonViewModel.onCompletedFields(pokemonNumber = pokemonNumber, pokemonName = it, pokemonPrimaryType = pokemonPrimaryType, pokemonSecondaryType = pokemonSecondaryType) },
                 label = { Text("Introduce el nombre") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
@@ -82,6 +82,7 @@ fun SavePokemon(navController: NavHostController) {
             Spacer(modifier = Modifier.size(5.dp))
 
             var expanded by remember { mutableStateOf(false) }
+            var expandedSec by remember { mutableStateOf(false) }
             val primaryTypes = listOf(
                 "Normal", "Fuego", "Agua", "Eléctrico", "Planta", "Hielo", "Lucha", "Veneno", "Tierra", "Volador", "Psíquico", "Bicho", "Roca", "Fantasma", "Dragón", "Siniestro", "Acero", "Hada"
             )
@@ -91,8 +92,14 @@ fun SavePokemon(navController: NavHostController) {
 
 
             var textFieldSizeDropDownMenu by remember { mutableStateOf(Size.Zero)}
+            var textFieldSizeDropDownMenuSec by remember { mutableStateOf(Size.Zero)}
 
             val icon = if (expanded)
+                Icons.Filled.KeyboardArrowUp
+            else
+                Icons.Filled.KeyboardArrowDown
+
+            val iconSec = if (expandedSec)
                 Icons.Filled.KeyboardArrowUp
             else
                 Icons.Filled.KeyboardArrowDown
@@ -121,7 +128,7 @@ fun SavePokemon(navController: NavHostController) {
             ) {
                 primaryTypes.forEach { label ->
                     DropdownMenuItem(onClick = {
-                        pokemonPrimaryType = label
+                        savePokemonViewModel.onCompletedFields(pokemonNumber = pokemonNumber, pokemonName = pokemonName, pokemonPrimaryType = label, pokemonSecondaryType = pokemonSecondaryType)
                         expanded = false
                     }) {
                         Text(text = label)
@@ -135,27 +142,28 @@ fun SavePokemon(navController: NavHostController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .onGloballyPositioned { coordinates ->
-                        textFieldSizeDropDownMenu = coordinates.size.toSize()
+                        textFieldSizeDropDownMenuSec = coordinates.size.toSize()
                     },
                 value = pokemonSecondaryType,
                 onValueChange = {  },
                 readOnly = true,
-                label = {Text("Introduce el tipo secundario", Modifier.clickable { expanded = !expanded })},
+                label = {Text("Introduce el tipo secundario", Modifier.clickable { expandedSec = !expandedSec })},
                 trailingIcon = {
-                    Icon(icon,"contentDescription",
-                        Modifier.clickable { expanded = !expanded })
+                    Icon(iconSec,"contentDescription",
+                        Modifier.clickable { expandedSec = !expandedSec })
                 }
             )
+
             DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
+                expanded = expandedSec,
+                onDismissRequest = { expandedSec = false },
                 modifier = Modifier
-                    .width(with(LocalDensity.current){textFieldSizeDropDownMenu.width.toDp()})
+                    .width(with(LocalDensity.current){textFieldSizeDropDownMenuSec.width.toDp()})
             ) {
                 secondaryTypes.forEach { label ->
                     DropdownMenuItem(onClick = {
-                        pokemonSecondaryType = label
-                        expanded = false
+                        savePokemonViewModel.onCompletedFields(pokemonNumber = pokemonNumber, pokemonName = pokemonName, pokemonPrimaryType = pokemonPrimaryType, pokemonSecondaryType = label)
+                        expandedSec = false
                     }) {
                         Text(text = label)
                     }
@@ -173,42 +181,28 @@ fun SavePokemon(navController: NavHostController) {
             var confirmationMessage by remember { mutableStateOf("") }
 
             Button(
-
                 onClick = {
                     db.collection(collectionName)
                         .document(pokemonNumber)
                         .set(data)
                         .addOnSuccessListener {
                             confirmationMessage ="Datos guardados correctamente"
-                            pokemonNumber =""
-                            pokemonName=""
-                            pokemonPrimaryType=""
-                            pokemonSecondaryType=""
                         }
                         .addOnFailureListener {
                             confirmationMessage ="No se ha podido guardar"
-                            pokemonNumber =""
-                            pokemonName=""
-                            pokemonPrimaryType=""
-                            pokemonSecondaryType=""
                         }
                 },
-
+                enabled= isButtonEnable,
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = Color.Blue,
                     contentColor = Color.White
                 ),
                 border = BorderStroke(1.dp, Color.Black)
-            )
-            {
-
+            ) {
                 Text(text = "Guardar")
-
-
             }
             Spacer(modifier = Modifier.size(5.dp))
             Text(text = confirmationMessage)
         }
-
     }
 }
