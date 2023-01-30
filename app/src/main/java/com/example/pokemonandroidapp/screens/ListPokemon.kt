@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,29 +20,16 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
 fun ListPokemon(navController: NavHostController, listPokemonViewModel: ListPokemonViewModel) {
+    val data by listPokemonViewModel.pokemon.observeAsState(mutableListOf())
 
-    val collectionPath = "pokemon"
-    val db = FirebaseFirestore.getInstance()
-    var data by rememberSaveable { mutableStateOf(emptyArray<Pokemon>()) }
-
-    db.collection(collectionPath)
-        .get()
-        .addOnSuccessListener {
-            data = emptyArray()
-            for (received in it) {
-                val auxData = Pokemon(received.id, received.get("name") as String, received.get("primaryType") as String, received.get("secondaryType") as String)
-                data += auxData
-            }
-        }
+    listPokemonViewModel.loadPokemon()
 
     Column(
-
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 100.dp, start = 10.dp, end = 10.dp)
     ) {
-
         Text(
             text = "Listado de Pokemon",
             fontWeight = FontWeight.ExtraBold
@@ -57,9 +45,7 @@ fun ListPokemon(navController: NavHostController, listPokemonViewModel: ListPoke
         ) {
             data.forEach { pokemon ->
                 PokemonBox(pokemon = pokemon, delete = true) {
-                    db.collection(collectionPath)
-                        .document(pokemon.number)
-                        .delete()
+                    listPokemonViewModel.deletePokemon(pokemon.number)
                 }
             }
         }

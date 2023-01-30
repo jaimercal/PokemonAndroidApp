@@ -4,6 +4,5 @@ package com.example.pokemonandroidapp.navigation
 sealed class AppScreens(val route: String){
     object InitialScreen: AppScreens("InitialScreen")
     object SavePokemon: AppScreens("SavePokemon")
-    object EditPokemon: AppScreens("EditPokemon")
     object ListPokemon: AppScreens("ListPokemon")
     }

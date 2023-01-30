@@ -26,15 +26,12 @@ import com.google.firebase.firestore.FirebaseFirestore
 @Composable
 
 fun SavePokemon(navController: NavHostController, savePokemonViewModel: SavePokemonViewModel) {
-
-    val db = FirebaseFirestore.getInstance()
-
-    val collectionName = "pokemon"
     val pokemonNumber by savePokemonViewModel.pokemonNumber.observeAsState(initial = "")
     val pokemonName by savePokemonViewModel.pokemonName.observeAsState(initial = "")
     val pokemonPrimaryType by savePokemonViewModel.pokemonPrimaryType.observeAsState(initial = "")
     val pokemonSecondaryType by savePokemonViewModel.pokemonSecondaryType.observeAsState(initial = "")
     val isButtonEnable:Boolean by savePokemonViewModel.isButtonEnable.observeAsState(initial = false)
+    val responseMessage by savePokemonViewModel.responseMessage.observeAsState("")
 
     Card(
         modifier = Modifier
@@ -83,13 +80,9 @@ fun SavePokemon(navController: NavHostController, savePokemonViewModel: SavePoke
 
             var expanded by remember { mutableStateOf(false) }
             var expandedSec by remember { mutableStateOf(false) }
-            val primaryTypes = listOf(
-                "Normal", "Fuego", "Agua", "Eléctrico", "Planta", "Hielo", "Lucha", "Veneno", "Tierra", "Volador", "Psíquico", "Bicho", "Roca", "Fantasma", "Dragón", "Siniestro", "Acero", "Hada"
-            )
-            val secondaryTypes = listOf(
-                "Normal", "Fuego", "Agua", "Eléctrico", "Planta", "Hielo", "Lucha", "Veneno", "Tierra", "Volador", "Psíquico", "Bicho", "Roca", "Fantasma", "Dragón", "Siniestro", "Acero", "Hada", "No tiene"
-            )
 
+            val primaryTypes: List<String> = savePokemonViewModel.pokemonPrimaryTypes
+            val secondaryTypes: List<String> = savePokemonViewModel.pokemonSecondaryTypes
 
             var textFieldSizeDropDownMenu by remember { mutableStateOf(Size.Zero)}
             var textFieldSizeDropDownMenuSec by remember { mutableStateOf(Size.Zero)}
@@ -171,26 +164,10 @@ fun SavePokemon(navController: NavHostController, savePokemonViewModel: SavePoke
             }
 
             Spacer(modifier = Modifier.size(5.dp))
-            val data = hashMapOf(
-                "number" to pokemonNumber.toString(),
-                "name" to pokemonName.toString().lowercase(),
-                "primaryType" to pokemonPrimaryType.toString(),
-                "secondaryType" to pokemonSecondaryType.toString()
-            )
-
-            var confirmationMessage by remember { mutableStateOf("") }
 
             Button(
                 onClick = {
-                    db.collection(collectionName)
-                        .document(pokemonNumber)
-                        .set(data)
-                        .addOnSuccessListener {
-                            confirmationMessage ="Datos guardados correctamente"
-                        }
-                        .addOnFailureListener {
-                            confirmationMessage ="No se ha podido guardar"
-                        }
+                    savePokemonViewModel.addPokemon(pokemonNumber, pokemonName, pokemonPrimaryType, pokemonSecondaryType)
                 },
                 enabled= isButtonEnable,
                 colors = ButtonDefaults.buttonColors(
@@ -202,7 +179,7 @@ fun SavePokemon(navController: NavHostController, savePokemonViewModel: SavePoke
                 Text(text = "Guardar")
             }
             Spacer(modifier = Modifier.size(5.dp))
-            Text(text = confirmationMessage)
+            Text(text = responseMessage)
         }
     }
 }
